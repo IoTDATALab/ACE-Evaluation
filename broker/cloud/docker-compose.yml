@@ -1,0 +1,15 @@
+version: "2.4"
+services:
+  cloud_broker:
+    image: emqx/emqx:4.3.10
+    container_name: ecci_cloud_broker
+    restart: always
+    ports:
+      - "${CLOUD_ECCI_BROKER_PORT:-1883}:1883"
+      - "${CLOUD_ECCI_BROKER_MGT_PORT:-8081}:8081"
+      - "${CLOUD_ECCI_BROKER_DASHBOARD_PORT:-18083}:18083"
+    networks:
+      - ecci-cloud
+
+networks:
+  ecci-cloud:

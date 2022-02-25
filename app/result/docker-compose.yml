@@ -1,0 +1,35 @@
+version: "2.4"
+services:
+    result:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: result
+        environment:
+            EXPERIMENT: '${EXPERIMENT:-true}'
+            NUMBER: ${NUMBER:-1}
+            INTERVAL:  ${INTERVAL:-0.3}
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-202.117.43.192}
+            ECCI_LOCAL_BROKER_PORT: 1883
+            ECCI_LOCAL_BROKER_ID: ${ECCI_LOCAL_BROKER_ID:-321}
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: result
+            ECCI_BRIDGE_MOUNTPOINTS: "['/']"
+            SCENARIO: ${SCENARIO:-ACE+}
+            EDGE_TO_CLOUD_BANDWIDTH: ${EDGE_TO_CLOUD_BANDWIDTH:-10Mbps}
+            EDGE_TO_CLOUD_DELAY: ${EDGE_TO_CLOUD_DELAY:-100ms}
+            METRIC: '${METRIC:-false}'
+            EMQX_MGT_HOST: ${EMQX_MGT_HOST:-202.117.43.192}
+            EMQX_MGT_PORT: ${EMQX_MGT_PORT:-40001}
+            EMQX_MGT_USERNAME: ${EMQX_MGT_USERNAME:-admin}
+            EMQX_MGT_PASSWORD: ${EMQX_MGT_PASSWORD:-public}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+            BATCH_SIZE: '${BATCH_SIZE:-1}'
+            VIDEOS: ${VIDEOS:-1min}
+        volumes:
+            - $PWD/results/:/results
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+        command: bash -c "python3 main.py"

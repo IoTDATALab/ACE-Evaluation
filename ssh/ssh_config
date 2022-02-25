@@ -1,0 +1,66 @@
+
+Host cc
+    HostName xxx.xxx.xxx.xxx
+    Port 222
+    User test
+    IdentityFile ssh/ecci_id_rsa
+
+Host ec-a
+    HostName 192.168.0.110
+    Port 22
+    User test
+
+Host ec-a-1
+    HostName 192.168.0.115
+    Port 22
+    User pi
+
+Host ec-a-2
+    HostName 192.168.0.116
+    Port 22
+    User pi
+
+Host ec-a-3
+    HostName 192.168.0.126
+    Port 22
+    User pi
+
+Host ec-b
+    HostName 192.168.0.123
+    Port 22
+    User test
+
+Host ec-b-1
+    HostName 192.168.0.107
+    Port 22
+    User pi
+
+Host ec-b-2
+    HostName 192.168.0.118
+    Port 22
+    User pi
+
+Host ec-b-3
+    HostName 192.168.0.114
+    Port 22
+    User pi
+
+Host ec-c
+    HostName 192.168.0.132
+    Port 22
+    User test
+
+Host ec-c-1
+    HostName 192.168.0.29
+    Port 22
+    User pi
+
+Host ec-c-2
+    HostName 192.168.0.120
+    Port 22
+    User pi
+
+Host ec-c-3
+    HostName 192.168.0.121
+    Port 22
+    User pi

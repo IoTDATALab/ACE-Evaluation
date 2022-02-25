@@ -1,0 +1,216 @@
+version: "2.4"
+services:
+    mnv2_1:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-a-1
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1884
+            ECCI_LOCAL_BROKER_ID: ec-a
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+    mnv2_2:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-a-2
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1884
+            ECCI_LOCAL_BROKER_ID: ec-a
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_3:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-a-3
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1884
+            ECCI_LOCAL_BROKER_ID: ec-a
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_4:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-b-1
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1885
+            ECCI_LOCAL_BROKER_ID: ec-b
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_5:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-b-2
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1885
+            ECCI_LOCAL_BROKER_ID: ec-b
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_6:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-b-3
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1885
+            ECCI_LOCAL_BROKER_ID: ec-b
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_7:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-c-1
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1886
+            ECCI_LOCAL_BROKER_ID: ec-c
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_8:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-c-2
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1886
+            ECCI_LOCAL_BROKER_ID: ec-c
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+
+    mnv2_9:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ec-c-3
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1886
+            ECCI_LOCAL_BROKER_ID: ec-c
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"

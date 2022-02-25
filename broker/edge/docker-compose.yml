@@ -1,0 +1,30 @@
+version: "2.4"
+services:
+  edge_broker:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: ecci_edge_broker
+    cap_add:
+      - NET_ADMIN
+    environment: 
+      - EMQX_BRIDGE__MQTT__AWS__ADDRESS=${EDGE_EMQX_BRIDGE__MQTT__AWS__ADDRESS:-192.168.0.114:1883}
+      - EMQX_BRIDGE__MQTT__AWS__FORWARD_MOUNTPOINT=/
+      - EMQX_BRIDGE__MQTT__AWS__START_TYPE=auto
+      - EMQX_BRIDGE__MQTT__AWS__FORWARDS=ECCI/${CLOUD_ECCI_BROKER_ID:-620766f6-2882-11ea-8ddf-0242ac140005}/#
+      - EMQX_BRIDGE__MQTT__AWS__SUBSCRIPTION__1__TOPIC=ECCI/${EDGE_ECCI_BROKER_ID:-83add6ac-2882-11ea-8870-0242ac140005}/#
+      - EMQX_BRIDGE__MQTT__AWS__SUBSCRIPTION__1__QOS=2
+      - EMQX_BRIDGE__MQTT__AWS__CLIENTID=${EDGE_EMQX_BRIDGE__MQTT__AWS__CLIENTID:-ecci_edge_broker}
+      - EDGE_TO_CLOUD_DELAY=${EDGE_TO_CLOUD_DELAY:-100ms}
+      - EDGE_TO_CLOUD_BANDWIDTH=${EDGE_TO_CLOUD_BANDWIDTH:-10Mbps}
+      - CLOUD_ECCI_BROKER_PUBLIC_IP=${CLOUD_ECCI_BROKER_PUBLIC_IP:-192.168.0.114}
+      - CLOUD_ECCI_BROKER_PUBLIC_PORT=${CLOUD_ECCI_BROKER_PUBLIC_PORT:-1883}
+
+    restart: always
+    ports:
+      - "${EDGE_ECCI_BROKER_PORT:-1883}:1883"
+    networks:
+      - ecci-edge
+
+networks:
+  ecci-edge:

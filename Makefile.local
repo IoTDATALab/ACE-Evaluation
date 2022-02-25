@@ -1,0 +1,142 @@
+# Central Cloud
+CC := cc
+CC_IP := 192.168.0.114
+CC_PUBSUB_PORT := 1883
+CC_PUBSUB_MGT_HOST := 192.168.0.114
+CC_PUBSUB_MGT_PORT := 8081
+CC_PUBSUB_DASHBOARD_PORT := 18083
+
+EDGE_EMQX_BRIDGE__MQTT__AWS__ADDRESS := xxx.xxx.xxx.xxx:40000
+
+CLOUD_ECCI_BROKER_PUBLIC_IP := xxx.xxx.xxx.xxx
+CLOUD_ECCI_BROKER_PUBLIC_PORT := 40000
+
+EDGE_TO_CLOUD_BANDWIDTH := 20Mbps
+EDGE_TO_CLOUD_DELAY := 50ms
+
+# CI,EI, ACE, ACE+
+SCENARIO := ACE+
+
+METRIC := false
+
+INTERVAL := 0.1
+
+COMPRESSED := false
+COMPRESSED_QUALITY := 100
+
+VIDEOS := 5min
+
+build_broker:
+	@bash -c "pushd broker;make -f Makefile.local build-cloud-broker;popd"
+	@bash -c "pushd broker;make -f Makefile.local build-edge-broker;popd"
+
+build_detector:
+	@bash -c "pushd app/detector;docker-compose -f docker-compose.local.yml build --pull;popd"
+
+build_mnv2:
+	@bash -c "pushd app/mnv2;docker-compose -f docker-compose.local.yml build --pull;popd"
+
+build_scheduler:
+	@bash -c "pushd app/scheduler;docker-compose -f docker-compose.local.yml build --pull;popd"
+
+build_resnet:
+	@bash -c "pushd app/resnet;docker-compose -f docker-compose.gpu.yml build --pull;popd"
+
+build_result:
+	@bash -c "pushd app/result;docker-compose -f docker-compose.yml build --pull;popd"
+
+
+start_broker: 
+	@bash -c "pushd broker;\
+		make -f Makefile.local CLOUD_ECCI_BROKER_IP=${CC_IP} CLOUD_ECCI_BROKER_PORT=${CC_PUBSUB_PORT} CLOUD_ECCI_BROKER_MGT_PORT=${CC_PUBSUB_MGT_PORT}  CLOUD_ECCI_BROKER_DASHBOARD_PORT=${CC_PUBSUB_DASHBOARD_PORT} start-cloud-broker;\
+		popd" 
+	@${SSH_CMD} ${EC_A} bash -c "pushd broker;\
+		make -f Makefile.local EDGE_EMQX_BRIDGE__MQTT__AWS__ADDRESS=${EDGE_EMQX_BRIDGE__MQTT__AWS__ADDRESS} CLOUD_ECCI_BROKER_ID=${CC} CLOUD_ECCI_BROKER_PUBLIC_IP=${CLOUD_ECCI_BROKER_PUBLIC_IP}  CLOUD_ECCI_BROKER_PUBLIC_PORT=${CLOUD_ECCI_BROKER_PUBLIC_PORT} EDGE_TO_CLOUD_BANDWIDTH=${EDGE_TO_CLOUD_BANDWIDTH} EDGE_TO_CLOUD_DELAY=${EDGE_TO_CLOUD_DELAY} start-edge-broker;\
+		popd"
+
+stop_broker:
+	@bash -c "pushd broker;make -f Makefile.local stop-cloud-broker;popd" 
+	@bash -c "pushd broker;make -f Makefile.local stop-edge-broker;popd" 
+
+
+build_app: build_detector build_mnv2 build_scheduler build_resnet build_result
+
+start_app: 
+	@echo "Start result on ${CC}"
+	@bash -c  "pushd app/result; \
+		VIDEOS=${VIDEOS} COMPRESSED=${COMPRESSED} COMPRESSED_QUALITY=${COMPRESSED_QUALITY} SCENARIO=${SCENARIO} INTERVAL=${INTERVAL} EDGE_TO_CLOUD_BANDWIDTH=${EDGE_TO_CLOUD_BANDWIDTH} EDGE_TO_CLOUD_DELAY=${EDGE_TO_CLOUD_DELAY} ECCI_LOCAL_BROKER_IP=${CC_IP} ECCI_LOCAL_BROKER_ID=${CC} NODE_NAME=${CC} docker-compose -f docker-compose.yml up -d;\
+		popd"	
+
+ifneq (${SCENARIO},EI)
+	@bash -c  "pushd app/resnet; \
+		COMPRESSED=${COMPRESSED} ECCI_LOCAL_BROKER_IP=${CC_IP} ECCI_LOCAL_BROKER_ID=${CC} NODE_NAME=${CC} docker-compose -f docker-compose.gpu.yml up -d;\
+		popd"	
+	@sleep 40
+endif
+
+ifeq (${SCENARIO},ACE+)
+	@bash -c  "pushd app/scheduler; \
+		INTERVAL=${INTERVAL} ECCI_REMOTE_BROKER_ID=${CC} docker-compose -f docker-compose.local.yml up -d;\
+		popd"
+endif
+
+ifneq (${SCENARIO},CI)
+	@bash -c "pushd app/mnv2; \
+			COMPRESSED=${COMPRESSED} SCENARIO=${SCENARIO} ECCI_REMOTE_BROKER_ID=${CC} docker-compose -f docker-compose.local.yml up -d;\
+			popd"
+endif
+
+	@bash -c "pushd app/detector; \
+			VIDEOS=${VIDEOS} COMPRESSED=${COMPRESSED} COMPRESSED_QUALITY=${COMPRESSED_QUALITY}  METRIC=${METRIC} SCENARIO=${SCENARIO} INTERVAL=${INTERVAL} ECCI_REMOTE_BROKER_ID=${CC} docker-compose -f docker-compose.local.yml up -d;\
+			popd"
+
+log_app:
+	@echo "Result logs on ${CC}"
+	@bash -c  "pushd app/result;docker-compose -f docker-compose.yml logs -f;popd"
+
+stop_app:
+	@bash -c "pushd app/detector;docker-compose -f docker-compose.local.yml down;popd"
+
+ifneq (${SCENARIO},CI)
+	@bash -c "pushd app/mnv2;docker-compose -f docker-compose.local.yml down;popd"
+endif
+
+ifeq (${SCENARIO},ACE+)
+	@bash -c "pushd app/scheduler;docker-compose -f docker-compose.local.yml down;popd"
+endif
+
+ifneq (${SCENARIO},EI)
+	@bash -c "pushd app/resnet;docker-compose -f docker-compose.gpu.yml down;popd"
+endif
+
+	@echo "Stop result on ${CC}"
+	@bash -c  "pushd app/result;docker-compose -f docker-compose.yml down;popd"
+
+start_metric:
+	@echo "Start result on ${CC}"
+	@bash -c  "pushd app/result; \
+		VIDEOS=${VIDEOS} COMPRESSED=${COMPRESSED} COMPRESSED_QUALITY=${COMPRESSED_QUALITY} METRIC=${METRIC} SCENARIO=${SCENARIO} INTERVAL=${INTERVAL} EDGE_TO_CLOUD_BANDWIDTH=${EDGE_TO_CLOUD_BANDWIDTH} EDGE_TO_CLOUD_DELAY=${EDGE_TO_CLOUD_DELAY} ECCI_LOCAL_BROKER_IP=${CC_IP} ECCI_LOCAL_BROKER_ID=${CC} NODE_NAME=${CC} docker-compose -f docker-compose.yml up -d;\
+		popd"
+		
+	@bash -c  "pushd app/resnet; \
+		METRIC=${METRIC} ECCI_LOCAL_BROKER_IP=${CC_IP} ECCI_LOCAL_BROKER_ID=${CC} NODE_NAME=${CC} docker-compose -f docker-compose.gpu.yml up -d;\
+		popd"	
+	@sleep 40
+
+	@bash -c "pushd app/detector; \
+				VIDEOS=${VIDEOS} METRIC=${METRIC} SCENARIO=${SCENARIO} INTERVAL=${INTERVAL} ECCI_REMOTE_BROKER_ID=${CC} docker-compose -f docker-compose.local.yml up -d;\
+				popd"
+log_metric:
+	@echo "Result logs on ${CC}"
+	@bash -c  "pushd app/result;docker-compose -f docker-compose.yml logs -f;popd"
+
+
+stop_metric:
+	@bash -c "pushd app/detector;docker-compose -f docker-compose.local.yml down;popd"
+	
+	@bash -c "pushd app/resnet;docker-compose -f docker-compose.gpu.yml down;popd"
+
+	@bash -c "pushd app/result;docker-compose -f docker-compose.yml down;popd"
+
+collect_results:
+	@cp -r app/result/results/* results/

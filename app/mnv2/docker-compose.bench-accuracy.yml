@@ -1,0 +1,14 @@
+version: "2.4"
+services:
+    mnv2_bench_accuracy:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: mnv2-bench-accuracy
+        environment:
+            PYTHONUNBUFFERED: 1
+        volumes:
+            - $DATASET:/dataset
+            - $PWD/bench-accuracy.py:/bench-accuracy.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 bench-accuracy.py"

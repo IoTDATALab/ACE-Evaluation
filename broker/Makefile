@@ -1,0 +1,48 @@
+SHELL := /bin/bash
+
+CLOUD_ECCI_BROKER_IP := 192.168.0.114
+CLOUD_ECCI_BROKER_PORT := 1883
+CLOUD_ECCI_BROKER_MGT_HOST :=192.168.0.114
+CLOUD_ECCI_BROKER_MGT_PORT := 8081
+CLOUD_ECCI_BROKER_DASHBOARD_PORT := 18083
+CLOUD_ECCI_BROKER_ID := 620766f6-2882-11ea-8ddf-0242ac140005
+
+CLOUD_ECCI_BROKER_PUBLIC_IP := 202.117.43.192
+CLOUD_ECCI_BROKER_PUBLIC_PORT := 40000
+EDGE_TO_CLOUD_BANDWIDTH := 10Mbps
+EDGE_TO_CLOUD_DELAY := 100ms
+
+EDGE_EMQX_BRIDGE__MQTT__AWS__ADDRESS := 192.168.0.114:1883
+EDGE_ECCI_BROKER_PORT := 1884
+EDGE_ECCI_BROKER_ID := 83add6ac-2882-11ea-8870-0242ac140005
+
+EDGE_EMQX_BRIDGE__MQTT__AWS__CLIENTID := ecci_edge_broker
+
+
+.PHONY: init
+init: 
+	@which docker >/dev/null || ( echo "Error: Docker is not installed"; exit 1 )
+	@which docker-compose >/dev/null || ( echo "Error: docker-compose is not installed"; exit 1 )
+
+.PHONY: build-edge-broker start-edge-broker stop-edge-broker
+
+build-edge-broker: init
+	@pushd ./edge;docker-compose build --pull;popd
+
+start-edge-broker:
+	@pushd ./edge;docker-compose up -d;popd
+
+stop-edge-broker:
+	@pushd ./edge;docker-compose down;popd
+
+.PHONY: build-cloud-broker start-cloud-broker stop-cloud-broker
+
+build-cloud-broker: init
+	@pushd ./cloud;docker-compose build --pull;popd
+
+start-cloud-broker:
+	@pushd ./cloud;docker-compose up -d;popd
+
+stop-cloud-broker:
+
+	@pushd ./cloud;docker-compose down;popd

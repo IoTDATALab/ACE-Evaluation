@@ -1,0 +1,13 @@
+version: "2.4"
+services:
+    mnv2:
+        image: wangluhui/tensorflow-lite:latest
+        container_name: mnv2
+        environment:
+            PYTHONUNBUFFERED: 1
+        volumes:
+            - $PWD/images:/images
+            - $PWD/bench.py:/bench.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 bench.py"
+        cpus: 2

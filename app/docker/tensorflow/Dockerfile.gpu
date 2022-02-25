@@ -1,0 +1,8 @@
+FROM tensorflow/tensorflow:1.15.5-gpu-py3
+
+RUN apt-get update && \
+    pip3 install paho-mqtt &&\
+    pip3 install --default-timeout=100 numpy opencv-python-headless keras==2.2.4 && \
+    apt-get install --fix-missing -y libglib2.0-dev libsm6 libxrender1 libxext-dev libturbojpeg && \
+    pip3 install PyTurboJPEG && \
+    rm -rf /var/lib/apt/lists/* && rm -rf ~/.cache/pip

@@ -1,0 +1,6 @@
+FROM wangluhui/tensorflow-lite:latest
+
+RUN pip install pillow \
+    && git clone https://hub.fastgit.xyz/karanjakhar/yolov5-export-to-raspberry-pi /code
+
+WORKDIR /code

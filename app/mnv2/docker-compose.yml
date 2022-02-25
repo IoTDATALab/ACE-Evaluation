@@ -1,0 +1,27 @@
+version: "2.4"
+services:
+    mnv2:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: mnv2
+
+        environment:
+            QUERYOBJECT: moped
+            NODE_NAME: ${NODE_NAME:-1}
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.117}
+            ECCI_LOCAL_BROKER_PORT: 1883
+            ECCI_LOCAL_BROKER_ID: ${ECCI_LOCAL_BROKER_ID:-123}
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: mnv2
+            ECCI_REMOTE_BROKER_ID: ${ECCI_REMOTE_BROKER_ID:-321}
+            SCENARIO: ${SCENARIO:-ACE+}
+            COMPRESSED: '${COMPRESSED:-false}'
+            COMPRESSED_QUALITY: '${COMPRESSED_QUALITY:-100}'
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+            - $PWD/converted_model.tflite:/converted_model.tflite
+        command: bash -c "python3 main.py"
+        cpus: 2

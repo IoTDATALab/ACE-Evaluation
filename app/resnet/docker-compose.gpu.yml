@@ -1,0 +1,28 @@
+version: "2.4"
+services:
+    resnet:
+        build:
+            context: .
+            dockerfile: Dockerfile.gpu
+        container_name: resnet
+
+        runtime: nvidia
+        environment:
+            NODE_NAME: ${NODE_NAME:-cc}
+            QUERYOBJECT: moped
+            PYTHONUNBUFFERED: 1
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-202.117.43.192}
+            ECCI_LOCAL_BROKER_PORT: 1883
+            ECCI_LOCAL_BROKER_ID: ${ECCI_LOCAL_BROKER_ID:-321}
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: resnet
+            ECCI_BRIDGE_MOUNTPOINTS: "['/']"
+            METRIC: '${METRIC:-false}'
+            COMPRESSED: '${COMPRESSED:-false}'
+            BATCH_SIZE: '${BATCH_SIZE:-1}'
+        volumes:
+            - $PWD/images:/images
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+        command: bash -c "python3 main.py"
+

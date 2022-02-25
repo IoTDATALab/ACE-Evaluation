@@ -1,0 +1,18 @@
+version: "2.4"
+services:
+    resnet:
+        image: wangluhui/tensorflow:latest-gpu
+        container_name: resnet
+        runtime: nvidia
+        environment:
+            QUERYOBJECT: moped
+            PYTHONUNBUFFERED: 1
+        volumes:
+            - $PWD/images:/images
+            - $PWD/bench.py:/bench.py
+            - $PWD/model.py:/model.py
+            - $PWD/resnet152_weights_tf_dim_ordering_tf_kernels.h5:/resnet152_weights_tf_dim_ordering_tf_kernels.h5
+            - $PWD/imagenet_class_index.json:/imagenet_class_index.json
+            - $PWD/imagenet_utils.py:/usr/local/lib/python3.5/dist-packages/keras_applications/imagenet_utils.py
+        working_dir: /
+        command: bash -c "python3 bench.py"

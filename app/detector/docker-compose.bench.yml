@@ -1,0 +1,16 @@
+version: "2.4"
+services:
+    detector_bench:
+        build:
+            context: .
+            dockerfile: Dockerfile.bench
+        container_name: bench
+
+        environment:
+            PYTHONUNBUFFERED: 1
+        volumes:
+            - $PWD/images:/images
+            - $PWD/bench.py:/code/bench.py
+            - $PWD/videos:/videos
+        command: bash -c "python3 bench.py"
+        cpus: 2

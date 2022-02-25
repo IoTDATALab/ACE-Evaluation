@@ -1,0 +1,58 @@
+version: "2.4"
+services:
+    scheduler_1:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            PYTHONUNBUFFERED: 1
+            NODE_NAME: ec-a
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1884
+            ECCI_LOCAL_BROKER_ID: ec-a
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: scheduler
+            INTERVAL: INTERVAL:-0.3}
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+        command: bash -c "python3 main.py"
+
+    scheduler_2:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            PYTHONUNBUFFERED: 1
+            NODE_NAME: ec-b
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1885
+            ECCI_LOCAL_BROKER_ID: ec-b
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: scheduler
+            INTERVAL: INTERVAL:-0.3}
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+        command: bash -c "python3 main.py"
+
+    scheduler_3:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        environment:
+            PYTHONUNBUFFERED: 1
+            NODE_NAME: ec-c
+            ECCI_LOCAL_BROKER_IP: ${ECCI_LOCAL_BROKER_IP:-192.168.0.114}
+            ECCI_LOCAL_BROKER_PORT: 1886
+            ECCI_LOCAL_BROKER_ID: ec-c
+            ECCI_APP_ID: experiment
+            ECCI_CONTAINER_NAME: scheduler
+            INTERVAL: INTERVAL:-0.3}
+        volumes:
+            - $PWD/main.py:/main.py
+            - $PWD/mqtt_client.py:/mqtt_client.py
+        command: bash -c "python3 main.py"
